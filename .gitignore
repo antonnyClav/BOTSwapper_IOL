@@ -1,0 +1,26 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Build results
+bin/
+obj/
+out/
+
+# NuGet
+*.nupkg
+**/packages/*
+project.lock.json
+project.assets.json
+*.nuget.*
+
+# Cache
+*.cache
+*.db
+*.log
+
+# Other
+*.tmp
+*.bak
+*.DS_Store
