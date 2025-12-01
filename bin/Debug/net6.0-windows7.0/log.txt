@@ -1,0 +1,52 @@
+2025-11-27 13:22:10 - Login VETA Ok
+2025-11-27 13:22:15 - Websocket Ok
+2025-11-27 13:22:16 - Login IOL Ok
+2025-11-27 13:22:16 - SQL Server conectado Ok
+2025-11-27 13:24:23 - Login VETA OK
+2025-11-27 13:24:38 - Login VETA Ok
+2025-11-27 13:24:42 - Websocket Ok
+2025-11-27 13:24:43 - Login IOL Ok
+2025-11-27 13:24:43 - SQL Server conectado Ok
+2025-11-27 13:25:04 - Login VETA OK
+2025-11-27 13:25:09 - Error de obtención de tenencia: Unexpected character encountered while parsing value: <. Path '', line 1, position 1.
+2025-11-27 13:25:10 - Login VETA OK
+2025-11-27 13:25:11 - Error de obtención de tenencia: Unexpected character encountered while parsing value: <. Path '', line 1, position 1.
+2025-11-27 13:25:14 - Error de obtención de tenencia: Unexpected character encountered while parsing value: <. Path '', line 1, position 1.
+2025-11-27 13:25:14 - Login VETA OK
+2025-11-27 13:25:38 - Login VETA OK
+2025-11-27 13:25:41 - Error de obtención de tenencia: Unexpected character encountered while parsing value: <. Path '', line 1, position 1.
+2025-11-27 13:25:41 - Login VETA OK
+2025-11-27 13:45:10 - Login VETA Ok
+2025-11-27 13:45:14 - Websocket Ok
+2025-11-27 13:45:14 - Login IOL Ok
+2025-11-27 13:45:15 - SQL Server conectado Ok
+2025-11-27 16:02:02 - Login VETA Ok
+2025-11-27 16:02:07 - Websocket Ok
+2025-11-27 16:02:07 - Login IOL Ok
+2025-11-27 16:02:08 - SQL Server conectado Ok
+2025-11-28 09:58:18 - Login VETA Ok
+2025-11-28 09:58:21 - Websocket Ok
+2025-11-28 09:58:22 - Login IOL Ok
+2025-11-28 09:58:23 - SQL Server conectado Ok
+2025-11-28 09:58:33 - Fuera de horario para guardar DB.
+2025-11-28 09:58:36 - Fuera de horario para operar.
+2025-11-28 13:21:35 - Login VETA Ok
+2025-11-28 13:21:39 - Websocket Ok
+2025-11-28 13:21:39 - Login IOL Ok
+2025-11-28 13:21:40 - SQL Server conectado Ok
+2025-11-28 13:34:35 - Login VETA Ok
+2025-11-28 13:34:37 - Websocket Ok
+2025-11-28 13:34:38 - Login IOL Ok
+2025-11-28 13:34:38 - SQL Server conectado Ok
+2025-11-28 13:48:00 - Login VETA Ok
+2025-11-28 13:48:02 - Websocket Ok
+2025-11-28 13:48:03 - Login IOL Ok
+2025-11-28 13:48:03 - SQL Server conectado Ok
+2025-11-28 13:48:55 - Login VETA Ok
+2025-11-28 13:48:58 - Websocket Ok
+2025-11-28 13:48:58 - Login IOL Ok
+2025-11-28 13:48:58 - SQL Server conectado Ok
+2025-11-28 14:24:37 - Login VETA Ok
+2025-11-28 14:24:39 - Websocket Ok
+2025-11-28 14:24:40 - Login IOL Ok
+2025-11-28 14:24:40 - SQL Server conectado Ok

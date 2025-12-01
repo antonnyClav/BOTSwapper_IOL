@@ -1,0 +1,36 @@
+2025-11-28 14:49:56 - Login VETA Ok
+2025-11-28 14:52:42 - Login VETA Ok
+2025-11-28 14:57:24 - Login VETA Ok
+2025-11-28 14:57:28 - Websocket Ok
+2025-11-28 14:57:29 - Login IOL Ok
+2025-11-28 14:57:29 - SQL Server conectado Ok
+2025-12-01 14:15:49 - Login VETA Ok
+2025-12-01 14:15:56 - Websocket Ok
+2025-12-01 14:15:56 - Login IOL Ok
+2025-12-01 14:15:57 - SQL Server conectado Ok
+2025-12-01 14:16:25 - Login VETA Ok
+2025-12-01 14:16:30 - Websocket Ok
+2025-12-01 14:16:30 - Login IOL Ok
+2025-12-01 14:16:30 - SQL Server conectado Ok
+2025-12-01 16:38:07 - Login VETA Ok
+2025-12-01 16:38:11 - Websocket Ok
+2025-12-01 16:38:12 - Login IOL Ok
+2025-12-01 16:38:12 - SQL Server conectado Ok
+2025-12-01 16:39:27 - Login VETA Ok
+2025-12-01 16:39:31 - Websocket Ok
+2025-12-01 16:39:32 - Login IOL Ok
+2025-12-01 16:39:32 - SQL Server conectado Ok
+2025-12-01 16:40:24 - Login VETA Ok
+2025-12-01 16:40:29 - Websocket Ok
+2025-12-01 16:40:29 - Login IOL Ok
+2025-12-01 16:40:30 - SQL Server conectado Ok
+2025-12-01 18:08:22 - Login VETA Ok
+2025-12-01 18:08:27 - Websocket Ok
+2025-12-01 18:08:28 - Login IOL Ok
+2025-12-01 18:08:28 - SQL Server conectado Ok
+2025-12-01 19:29:32 - Login VETA Ok
+2025-12-01 19:29:32 - Login VETA Ok
+2025-12-01 19:29:45 - Login VETA Ok
+2025-12-01 19:29:50 - Websocket Ok
+2025-12-01 19:29:51 - Login IOL Ok
+2025-12-01 19:29:51 - SQL Server conectado Ok
