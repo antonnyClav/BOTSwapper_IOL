@@ -915,11 +915,14 @@ namespace BOTSwapper
 
             if (bOperacionOk)
             {
-                Tenencia1 = Tenencia1 - cantidadDesde;
-                Tenencia2 = cantidadHasta;
+                if (Tenencia1 > 0 || Tenencia2 > 0)
+                {
+                    Tenencia1 = Tenencia1 - cantidadDesde;
+                    Tenencia2 = cantidadHasta;
 
-                txtTenenciaTicker1.Text = Tenencia1.ToString();
-                txtTenenciaTicker2.Text = Tenencia2.ToString();
+                    txtTenenciaTicker1.Text = Tenencia1.ToString();
+                    txtTenenciaTicker2.Text = Tenencia2.ToString();
+                }
             }
         }
 
@@ -955,11 +958,14 @@ namespace BOTSwapper
 
             if (bOperacionOk)
             {
-                Tenencia1 = Tenencia1 - cantidadDesde;
-                Tenencia2 = cantidadHasta;
+                if (Tenencia1 > 0 || Tenencia2 > 0)
+                {
+                    Tenencia1 = Tenencia1 - cantidadDesde;
+                    Tenencia2 = cantidadHasta;
 
-                txtTenenciaTicker1.Text = Tenencia1.ToString();
-                txtTenenciaTicker2.Text = Tenencia2.ToString();
+                    txtTenenciaTicker1.Text = Tenencia1.ToString();
+                    txtTenenciaTicker2.Text = Tenencia2.ToString();
+                }                
             }
         }
 
