@@ -84,7 +84,7 @@ namespace BOTSwapper
             cboTicker2.Items.Add("TX26");
             cboTicker2.Text = "AL30";
             double umbral;
-            for (umbral = 0.01; umbral <= 3; umbral += 0.01)
+            for (umbral = 0.01; umbral <= 10; umbral += 0.01)
             {
                 cboUmbral.Items.Add(Math.Round(umbral, 2));
             }
@@ -467,6 +467,7 @@ namespace BOTSwapper
 
         private void FillListaTickers()
         {
+            nombres.Clear();
             nombres.Add(cboTicker1.Text);
             nombres.Add(cboTicker2.Text);
 
@@ -668,13 +669,18 @@ namespace BOTSwapper
 
                 if (int.Parse(DateTime.Now.ToString("HHmm")) >= HoraDesdeMK && int.Parse(DateTime.Now.ToString("HHmm")) <= HoraHastaMK)
                 {
+                    if (iTenenciaTicker2 > 0 && compraTicker1 > 0) 
+                        this.Text = this.Tag.ToString() + "---> Umbral actual: " + delta2a1;
+                    if (iTenenciaTicker1 > 0 && compraTicker2 > 0)
+                        this.Text = this.Tag.ToString() + "---> Umbral actual: " + delta1a2;
+
                     if (chkAuto.Checked)
                     {
                         umbral = double.Parse(cboUmbral.Text);
 
                         if (iTenenciaTicker2 > 0 && compraTicker1 > 0)
                         {
-                            this.Text = this.Tag.ToString() + "---> Umbral comparado: " + delta2a1;
+                                                       
                             Application.DoEvents();
                             if (delta2a1 >= umbral)
                             {
@@ -682,6 +688,7 @@ namespace BOTSwapper
                                     (chkBandas.Checked == true && double.Parse(txt2a1.Text) <= double.Parse(txtBandaInf.Text)))
                                 {
                                     SystemSounds.Asterisk.Play();
+                                    ToLog("---> Umbral comparado:" + delta2a1);
                                     Rotar2a1();
                                 }
                             }
@@ -689,8 +696,7 @@ namespace BOTSwapper
 
 
                         if (iTenenciaTicker1 > 0 && compraTicker2 > 0)
-                        {                            
-                            this.Text = this.Tag.ToString() + "---> Umbral comparado: " + delta1a2;
+                        {                                                       
                             Application.DoEvents();
                             if (delta1a2 >= umbral)
                             {
@@ -698,6 +704,7 @@ namespace BOTSwapper
                                 (chkBandas.Checked == true && double.Parse(txt1a2.Text) >= double.Parse(txtBandaSup.Text)))
                                 {
                                     SystemSounds.Asterisk.Play();
+                                    ToLog("---> Umbral comparado:" + delta1a2);
                                     Rotar1a2();
                                 }
                             }
@@ -749,7 +756,7 @@ namespace BOTSwapper
                 }
             }
             tmrRefresh.Start();
-            
+
         }
 
         private async Task<double> ObtenerEfectivoDisponible()
@@ -785,6 +792,38 @@ namespace BOTSwapper
             if (cantidad < 1) return 0;
 
             return cantidad;
+        }
+        public int CalcularCantidadSegura(decimal montoDisponible, decimal precio, decimal factorCosto = 1.001915m)
+        {
+            // ---- 1) Detectar si el precio viene por lámina (100 nominales)
+            //       heurística: precios muy grandes (> 10.000) suelen ser "por lámina".
+            decimal precioPorNominal;
+            if (precio > 10000m)
+            {
+                // ejemplo: 95640 -> 956.40 por nominal
+                precioPorNominal = precio / 100m;
+            }
+            else
+            {
+                precioPorNominal = precio;
+            }
+
+            // ---- 2) costo por 1 nominal incluyendo comisiones
+            decimal costoUnitario = precioPorNominal * factorCosto;
+
+            // ---- 3) cantidad cruda (nominales) que alcanza
+            if (costoUnitario <= 0m)
+                return 0;
+
+            int cantidadCruda = (int)Math.Floor(montoDisponible / costoUnitario);
+
+            // ---- 4) devolvemos la cantidad máxima de nominales que se puede comprar
+            //      (si querés forzar múltiplos de 100, comentar la siguiente línea y descomentar la de abajo)
+            return cantidadCruda;
+
+            // Si querés DEVOLVER únicamente múltiplos de 100 (lotes):
+            // int cantidadLotes = (cantidadCruda / 100) * 100;
+            // return cantidadLotes;
         }
 
 
@@ -888,7 +927,7 @@ namespace BOTSwapper
             Rotar1a2();
         }
 
-        private void Rotar1a2()
+        private async void Rotar1a2()
         {
             string ticker1, ticker2;
             int cantidadDesde;
@@ -910,7 +949,7 @@ namespace BOTSwapper
             bool bOperacionOk = false;
             if (cantidadDesde > 0 && precioDesde > 0 && precioHasta > 0 && cantidadHasta > 0)
             {
-                Operar(ticker1, cantidadDesde, precioDesde, ticker2, cantidadHasta, precioHasta);
+                bOperacionOk = await Operar(ticker1, cantidadDesde, precioDesde, ticker2, cantidadHasta, precioHasta);
             }
 
             if (bOperacionOk)
@@ -921,8 +960,10 @@ namespace BOTSwapper
                     Tenencia2 = cantidadHasta;
 
                     txtTenenciaTicker1.Text = Tenencia1.ToString();
-                    txtTenenciaTicker2.Text = Tenencia2.ToString();
+                    txtTenenciaTicker2.Text = Tenencia2.ToString();                    
                 }
+                //chkAuto.Checked = false;
+                Application.DoEvents();
             }
         }
 
@@ -931,7 +972,7 @@ namespace BOTSwapper
             Rotar2a1();
         }
 
-        private void Rotar2a1()
+        private async void Rotar2a1()
         {
             string ticker1, ticker2;
             int cantidadDesde;
@@ -953,7 +994,7 @@ namespace BOTSwapper
             bool bOperacionOk = false;
             if (cantidadDesde > 0 && precioDesde > 0 && precioHasta > 0 && cantidadHasta > 0)
             {
-                Operar(ticker2, cantidadDesde, precioDesde, ticker1, cantidadHasta, precioHasta);
+                await Operar(ticker2, cantidadDesde, precioDesde, ticker1, cantidadHasta, precioHasta);
             }
 
             if (bOperacionOk)
@@ -964,13 +1005,16 @@ namespace BOTSwapper
                     Tenencia2 = cantidadHasta;
 
                     txtTenenciaTicker1.Text = Tenencia1.ToString();
-                    txtTenenciaTicker2.Text = Tenencia2.ToString();
-                }                
+                    txtTenenciaTicker2.Text = Tenencia2.ToString();                    
+                }
+                //chkAuto.Checked = false;
+                Application.DoEvents();
             }
         }
 
-        private async void Operar(string ticker1, int cantidadTicker1, double precioTicker1, string ticker2, int cantidadTicker2, double precioTicker2)
+        private async Task<bool> Operar(string ticker1, int cantidadTicker1, double precioTicker1, string ticker2, int cantidadTicker2, double precioTicker2)
         {
+            bool bReturn = false;
             LoginIOL();
             //ToLog("Iniciando");
 
@@ -1000,18 +1044,41 @@ namespace BOTSwapper
                     }
                     //Application.DoEvents();
 
-                    // 👉 Espera 2 segundos antes del próximo intento
-                    await Task.Delay(2000);
+                    // 👉 Espera 1 segundos antes del próximo intento
+                    await Task.Delay(1000);
                 }
                 if (estadooperacion == "terminada")
                 {
                     string operacionCompra = await Comprar(ticker2, cantidadTicker2, precioTicker2);
                     ToLog("Compra de " + ticker2 + " Q: " + cantidadTicker2 + " P: " + precioTicker2);
                     ToLog("Compra Estado Operacion " + operacionCompra);
+                    if (!string.IsNullOrEmpty(operacionCompra) &&
+                        operacionCompra.Contains("El monto de la operación excede el", StringComparison.OrdinalIgnoreCase))
+                    {
+                        double efectivo = await ObtenerEfectivoDisponible();
+                        int cantidad = CalcularCantidadSegura((decimal)efectivo, (decimal)precioTicker2);
+                        ToLog("RE-Compra de " + ticker2 + " Q: " + cantidad + " P: " + precioTicker2);
+                        operacionCompra = await Comprar(ticker2, cantidad, precioTicker2);
+                    }
 
                     if (operacionCompra != "Error")
                     {
                         estadooperacion = await GetEstadoOperacion(operacionCompra);
+                        for (int i = 1; i <= intentos; i++)
+                        {
+                            ToLog("Intento de compra " + i.ToString() + " de " + ticker2);
+                            estadooperacion = await GetEstadoOperacion(operacionCompra);
+                            ToLog("Intento " + i.ToString() + " estado: " + estadooperacion);
+                            if (estadooperacion == "terminada")
+                            {
+                                bReturn = true;
+                                ToLog("Compra Terminada!!!");
+                                break;
+                            }
+
+                            // 👉 Espera 1 segundo antes del próximo intento
+                            await Task.Delay(1000);
+                        }
                     }
                 }
                 else
@@ -1019,19 +1086,6 @@ namespace BOTSwapper
                     ToLog("Vencio la venta de " + ticker1);
                     ToLog("------------------------------");
                     await _broker.EliminarOperacion(operacionVenta);
-                    /*WebRequest request = WebRequest.Create(sURLIOL + "/api/v2/operaciones/" + operacionVenta);
-                    request.Method = "DELETE";
-                    request.ContentType = "application/json";
-                    request.Headers.Add("Authorization", bearer);
-
-                    try
-                    {
-                        WebResponse response = request.GetResponse();
-                    }
-                    catch (Exception e)
-                    {
-                        ToLog(e.Message);
-                    }*/
                 }
             }
             else
@@ -1043,6 +1097,8 @@ namespace BOTSwapper
             tmrRefresh.Start();
             ToLog("Desocupado");
             ToLog("Fin--------------------------");
+
+            return bReturn;
         }
         private async Task<string> GetEstadoOperacion(string idoperacion)
         {
@@ -1078,7 +1134,7 @@ namespace BOTSwapper
                 //Application.DoEvents();
                 string validez = DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + "T17:59:59.000Z";
                 string plazo = cboPlazo.Text == "CI" ? "t0" : "t1";
-                
+
                 var parametros = new Dictionary<string, string>()
                 {
                     { "mercado", "bCBA" },
@@ -1120,7 +1176,7 @@ namespace BOTSwapper
                 ToLog("Error Metodo Comprar: " + ex.Message);
                 return "Error";
             }
-            
+
         }
 
         private async Task<string> Vender(string simbolo, int cantidad, double precio)
@@ -1191,6 +1247,15 @@ namespace BOTSwapper
             //ToLog(Math.Round((expires - DateTime.Now).TotalSeconds).ToString());
         }
 
+        private void cboTicker1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            FillListaTickers();
+        }
+
+        private void cboTicker2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            FillListaTickers();
+        }
     }
 
     public class Ticker

@@ -404,6 +404,7 @@
             cboTicker2.Name = "cboTicker2";
             cboTicker2.Size = new Size(53, 23);
             cboTicker2.TabIndex = 3;
+            cboTicker2.SelectedIndexChanged += cboTicker2_SelectedIndexChanged;
             // 
             // cboTicker1
             // 
@@ -412,6 +413,7 @@
             cboTicker1.Name = "cboTicker1";
             cboTicker1.Size = new Size(53, 23);
             cboTicker1.TabIndex = 2;
+            cboTicker1.SelectedIndexChanged += cboTicker1_SelectedIndexChanged;
             // 
             // label1
             // 
