@@ -907,11 +907,20 @@ namespace BOTSwapper
             cantidadHasta = (int)Math.Ceiling(double.Parse(txtCompraTicker2.Text));
             precioHasta = double.Parse(txtTicker2Ask.Text);
 
+            bool bOperacionOk = false;
             if (cantidadDesde > 0 && precioDesde > 0 && precioHasta > 0 && cantidadHasta > 0)
             {
                 Operar(ticker1, cantidadDesde, precioDesde, ticker2, cantidadHasta, precioHasta);
             }
 
+            if (bOperacionOk)
+            {
+                Tenencia1 = Tenencia1 - cantidadDesde;
+                Tenencia2 = cantidadHasta;
+
+                txtTenenciaTicker1.Text = Tenencia1.ToString();
+                txtTenenciaTicker2.Text = Tenencia2.ToString();
+            }
         }
 
         private void btnRotar2a1_Click(object sender, EventArgs e)
@@ -938,9 +947,19 @@ namespace BOTSwapper
             cantidadHasta = (int)Math.Ceiling(double.Parse(txtCompraTicker1.Text));
             precioHasta = double.Parse(txtTicker1Ask.Text);
 
+            bool bOperacionOk = false;
             if (cantidadDesde > 0 && precioDesde > 0 && precioHasta > 0 && cantidadHasta > 0)
             {
                 Operar(ticker2, cantidadDesde, precioDesde, ticker1, cantidadHasta, precioHasta);
+            }
+
+            if (bOperacionOk)
+            {
+                Tenencia1 = Tenencia1 - cantidadDesde;
+                Tenencia2 = cantidadHasta;
+
+                txtTenenciaTicker1.Text = Tenencia1.ToString();
+                txtTenenciaTicker2.Text = Tenencia2.ToString();
             }
         }
 

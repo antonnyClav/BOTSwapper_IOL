@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("BOTSwapper")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f9e2a1c2cc630abebce7345dfe05edb720e4b6a6")]
 [assembly: System.Reflection.AssemblyProductAttribute("BOTSwapper")]
 [assembly: System.Reflection.AssemblyTitleAttribute("BOTSwapper")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
