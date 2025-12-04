@@ -542,12 +542,14 @@ namespace BOTSwapper
                     sqlCommand.CommandText = "sp_MD_INS";
                     sqlCommand.CommandType = CommandType.StoredProcedure;
                     sqlCommand.Parameters.AddWithValue("@dt", Ahora());
-                    sqlCommand.Parameters.AddWithValue("@GD30Bid", ticker1Bid);
-                    sqlCommand.Parameters.AddWithValue("@GD30Last", ticker1Last);
-                    sqlCommand.Parameters.AddWithValue("@GD30Ask", ticker1Ask);
-                    sqlCommand.Parameters.AddWithValue("@AL30Bid", ticker2Bid);
-                    sqlCommand.Parameters.AddWithValue("@AL30Last", ticker2Last);
-                    sqlCommand.Parameters.AddWithValue("@AL30Ask", ticker2Ask);
+                    sqlCommand.Parameters.AddWithValue("@Bono1_Bid", ticker1Bid);
+                    sqlCommand.Parameters.AddWithValue("@Bono1_Last", ticker1Last);
+                    sqlCommand.Parameters.AddWithValue("@Bono1_Ask", ticker1Ask);
+                    sqlCommand.Parameters.AddWithValue("@Bono2_Bid", ticker2Bid);
+                    sqlCommand.Parameters.AddWithValue("@Bono2_Last", ticker2Last);
+                    sqlCommand.Parameters.AddWithValue("@Bono2_Ask", ticker2Ask);
+                    sqlCommand.Parameters.AddWithValue("@bono1", this.cboTicker1.Text);
+                    sqlCommand.Parameters.AddWithValue("@bono2", this.cboTicker2.Text);
                     sqlCommand.ExecuteNonQuery();
                 }
             }
@@ -839,6 +841,8 @@ namespace BOTSwapper
             sqlCommand.CommandText = "sp_GetDataSet";
             sqlCommand.CommandType = CommandType.StoredProcedure;
             sqlCommand.Parameters.Add("@dt", SqlDbType.DateTime).Value = Ahora();
+            sqlCommand.Parameters.Add("@bono1", SqlDbType.VarChar).Value = this.cboTicker1.Text;
+            sqlCommand.Parameters.Add("@bono2", SqlDbType.VarChar).Value = this.cboTicker2.Text;
             rdr = sqlCommand.ExecuteReader();
 
             var dtList = new List<DateTime>();
@@ -883,6 +887,8 @@ namespace BOTSwapper
             sqlCommand.CommandText = "sp_GetData";
             sqlCommand.CommandType = CommandType.StoredProcedure;
             sqlCommand.Parameters.Add("@dt", SqlDbType.DateTime).Value = Ahora();
+            sqlCommand.Parameters.Add("@bono1", SqlDbType.VarChar).Value = this.cboTicker1.Text;
+            sqlCommand.Parameters.Add("@bono2", SqlDbType.VarChar).Value = this.cboTicker2.Text;
             rdr = sqlCommand.ExecuteReader();
             double Max;
             double Min;

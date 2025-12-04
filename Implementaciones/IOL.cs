@@ -41,6 +41,7 @@ namespace BOTSwapper.Implementaciones
                 response = await GetResponsePOST("/api/v2/operar/Comprar", parametros);
                 if (response.Contains("Error") || response.Contains("opuesta"))
                 {
+                    GrabarLog("Error Comprar: " + response);
                     return "Error";
                 }
                 else
@@ -91,6 +92,7 @@ namespace BOTSwapper.Implementaciones
                 response = await GetResponsePOST("/api/v2/operar/Vender", parametros);
                 if (response.Contains("Error") || response.Contains("opuesta"))
                 {
+                    GrabarLog("Error Vender: " + response);
                     return "Error";
                 }
                 else

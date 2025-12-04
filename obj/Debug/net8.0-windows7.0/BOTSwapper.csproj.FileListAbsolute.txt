@@ -89,3 +89,4 @@ E:\git\BOTSwapper-master_IOL\obj\Debug\net8.0-windows7.0\refint\BOTSwapper.dll
 E:\git\BOTSwapper-master_IOL\obj\Debug\net8.0-windows7.0\BOTSwapper.pdb
 E:\git\BOTSwapper-master_IOL\obj\Debug\net8.0-windows7.0\BOTSwapper.genruntimeconfig.cache
 E:\git\BOTSwapper-master_IOL\obj\Debug\net8.0-windows7.0\ref\BOTSwapper.dll
+E:\git\BOTSwapper-master_IOL\obj\Debug\net8.0-windows7.0\BOTSwapper.sourcelink.json
