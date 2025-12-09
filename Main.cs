@@ -103,8 +103,8 @@ namespace BOTSwapper
                 cboUmbral.Text = configuracion.GetSection("MiConfiguracion:Umbral").Value;
                 txtUsuarioIOL.Text = configuracion.GetSection("MiConfiguracion:UsuarioIOL").Value;
                 txtClaveIOL.Text = configuracion.GetSection("MiConfiguracion:ClaveIOL").Value;
-                txtUsuarioVETA.Text = configuracion.GetSection("MiConfiguracion:UsuarioVETA").Value;
-                txtClaveVETA.Text = configuracion.GetSection("MiConfiguracion:ClaveVETA").Value;
+                txtUsuarioIOL.Text = configuracion.GetSection("MiConfiguracion:UsuarioVETA").Value;
+                txtClaveIOL.Text = configuracion.GetSection("MiConfiguracion:ClaveVETA").Value;
                 timeOffset = double.Parse(configuracion.GetSection("MiConfiguracion:TimeOffset").Value);
                 cs = configuracion.GetSection("MiConfiguracion:CS").Value;
                 intentos = int.Parse(configuracion.GetSection("MiConfiguracion:Intentos").Value);
@@ -296,7 +296,7 @@ namespace BOTSwapper
             try
             {
                 var api = new Api(new Uri(sURLVETA));
-                await api.Login(txtUsuarioVETA.Text, txtClaveVETA.Text);
+                await api.Login(txtUsuarioIOL.Text, txtClaveIOL.Text);
                 if (api.AccessToken == null)
                 {
                     ToLog("Login VETA ERROR!");
@@ -305,7 +305,7 @@ namespace BOTSwapper
                 else
                 {
                     ToLog("Login VETA Ok");
-                    txtToken.Text = api.AccessToken;
+                    txtBearer.Text = api.AccessToken;
                 }
                 tokenVETA = "Bearer " + api.AccessToken;
 
@@ -865,22 +865,69 @@ namespace BOTSwapper
             double[] gdalYs = gdalList.ToArray();
             double[] algdYs = algdList.ToArray();
 
-            crtGrafico.Plot.Clear();
-            //crtGrafico.Plot.Add.Scatter(xs, ratioYs, label: "Ratio");
-            crtGrafico.Plot.Add.ScatterLine(xs, ratioYs, ScottPlot.Color.FromColor(System.Drawing.Color.Blue));
-            var sp = crtGrafico.Plot.Add.ScatterLine(xs, mm180Ys, ScottPlot.Color.FromColor(System.Drawing.Color.Goldenrod));
-            sp.LinePattern = LinePattern.Dashed;
-            crtGrafico.Plot.Add.ScatterLine(xs, gdalYs, ScottPlot.Color.FromColor(System.Drawing.Color.Green));
-            crtGrafico.Plot.Add.ScatterLine(xs, algdYs, ScottPlot.Color.FromColor(System.Drawing.Color.Red));
+            //var plt = crtGrafico.Plot;
 
-            crtGrafico.Plot.ShowGrid();
-            crtGrafico.Plot.Axes.DateTimeTicksBottom();
-            // Configure plot (optional)
-            //crtGrafico.Plot.Title("My Plot");
-            crtGrafico.Plot.XLabel("");
-            crtGrafico.Plot.YLabel("");
-            //crtGrafico.Plot.Legend();
-            crtGrafico.Plot.Axes.AutoScaleExpand();
+            //plt.Clear();
+            //plt.Legend.IsVisible = false;
+
+            //var ratio = plt.Add.ScatterLine(xs, ratioYs, ScottPlot.Color.FromColor(System.Drawing.Color.Blue));
+            //ratio.Label = "Ratio";
+
+            //var sp = plt.Add.ScatterLine(xs, mm180Ys, ScottPlot.Color.FromColor(System.Drawing.Color.Goldenrod));
+            //sp.LinePattern = LinePattern.Dashed;
+            //sp.Label = "MM";                                            // ← Esto ya lo tenías
+
+            //var gdal = plt.Add.ScatterLine(xs, gdalYs, ScottPlot.Color.FromColor(System.Drawing.Color.Green));
+            //gdal.Label = this.cboTicker1.Text + "->" + this.cboTicker2.Text;
+
+            //var algd = plt.Add.ScatterLine(xs, algdYs, ScottPlot.Color.FromColor(System.Drawing.Color.Red));
+            //algd.Label = this.cboTicker2.Text + "->" + this.cboTicker1.Text;
+
+            //plt.ShowLegend(Alignment.UpperLeft, ScottPlot.Orientation.Vertical);  // Dentro del gráfico, arriba-derecha
+
+            //plt.ShowGrid();
+            //plt.Axes.DateTimeTicksBottom();
+            //plt.XLabel("");
+            //plt.YLabel("");
+            //plt.Axes.AutoScaleExpand();
+            //crtGrafico.Refresh();
+
+
+            //var panel = crtGrafico.Parent;  // o el contenedor del FormsPlot
+            //panel.Controls.Remove(crtGrafico);
+            //crtGrafico = new ScottPlot.WinForms.FormsPlot();  // Nuevo plot
+            //panel.Controls.Add(crtGrafico);
+            //crtGrafico.Dock = DockStyle.Fill;  // Reajusta el tamaño
+            //                                   // Luego añade tus líneas al nuevo crtGrafico.Plot
+
+            var plt = crtGrafico.Plot;
+
+            plt.Clear();  // Esto resuelve los duplicados al 100%
+            plt.Legend.IsVisible = false;
+
+            // Tus 4 líneas (con el label añadido como antes)
+            var ratio = plt.Add.ScatterLine(xs, ratioYs, ScottPlot.Color.FromColor(System.Drawing.Color.Blue));
+            ratio.Label = "Ratio";                                      // ← Esto ya lo tenías
+
+            var mm = plt.Add.ScatterLine(xs, mm180Ys, ScottPlot.Color.FromColor(System.Drawing.Color.Goldenrod));
+            mm.Label = "MM";                                            // ← Esto ya lo tenías
+            mm.LinePattern = LinePattern.Dashed;
+
+            var gdal = plt.Add.ScatterLine(xs, gdalYs, ScottPlot.Color.FromColor(System.Drawing.Color.Green));
+            gdal.Label = this.cboTicker1.Text + "->" + this.cboTicker2.Text;                                // ← Esto ya lo tenías
+
+            var algd = plt.Add.ScatterLine(xs, algdYs, ScottPlot.Color.FromColor(System.Drawing.Color.Red));
+            algd.Label = this.cboTicker2.Text + "->" + this.cboTicker1.Text;                            // ← Esto ya lo tenías
+
+            plt.ShowGrid();
+            plt.Axes.DateTimeTicksBottom();   // ya lo tenías → perfecto
+
+            plt.ShowLegend(Alignment.UpperLeft, ScottPlot.Orientation.Vertical);  // Dentro del gráfico, arriba-izquierda
+
+            plt.XLabel("");
+            plt.YLabel("");
+            plt.Axes.AutoScaleExpand();
+
             crtGrafico.Refresh();
 
             sqlCommand = oCnn.CreateCommand();

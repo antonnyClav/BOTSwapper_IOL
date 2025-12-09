@@ -393,3 +393,19 @@
 2025-12-03 15:06:37 - Websocket Ok
 2025-12-03 15:06:38 - Login IOL Ok
 2025-12-03 15:06:38 - SQL Server conectado Ok
+2025-12-09 17:22:40 - Login VETA Ok
+2025-12-09 17:22:45 - Websocket Ok
+2025-12-09 17:22:46 - Error reading JObject from JsonReader. Path '', line 0, position 0.
+2025-12-09 17:22:46 - Login IOL Ok
+2025-12-09 17:22:47 - SQL Server conectado Ok
+2025-12-09 17:25:03 - Login VETA Ok
+2025-12-09 17:25:07 - Websocket Ok
+2025-12-09 17:25:07 - Error reading JObject from JsonReader. Path '', line 0, position 0.
+2025-12-09 17:25:07 - Login IOL Ok
+2025-12-09 17:25:08 - SQL Server conectado Ok
+2025-12-09 17:25:18 - Error reading JObject from JsonReader. Path '', line 0, position 0.
+2025-12-09 17:25:18 - Fuera de horario para guardar DB.
+2025-12-09 17:25:19 - Fuera de horario para operar.
+2025-12-09 17:25:28 - Error reading JObject from JsonReader. Path '', line 0, position 0.
+2025-12-09 17:25:28 - Fuera de horario para guardar DB.
+2025-12-09 17:25:28 - Fuera de horario para operar.
