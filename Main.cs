@@ -54,6 +54,8 @@ namespace BOTSwapper
         int HoraHastaMK;
         int Tenencia1;
         int Tenencia2;
+        bool ModoOscuro = false;
+
         public Main(IBrokerFactory broker)
         {
             _broker = broker.CrearBroker();
@@ -100,6 +102,9 @@ namespace BOTSwapper
                 .Build();
             try
             {
+                ModoOscuro = bool.Parse(configuracion.GetSection("MiConfiguracion:ModoOscuro").Value);
+                if (ModoOscuro) AplicarTemaOscuro(this);
+
                 cboUmbral.Text = configuracion.GetSection("MiConfiguracion:Umbral").Value;
                 txtUsuarioIOL.Text = configuracion.GetSection("MiConfiguracion:UsuarioIOL").Value;
                 txtClaveIOL.Text = configuracion.GetSection("MiConfiguracion:ClaveIOL").Value;
@@ -125,9 +130,7 @@ namespace BOTSwapper
             catch (Exception ex)
             {
                 ToLog(ex.Message);
-            }
-
-            AplicarTemaOscuro(this);
+            }           
         }
 
         private void AplicarTemaOscuro(Control control)
@@ -927,6 +930,12 @@ namespace BOTSwapper
             plt.XLabel("");
             plt.YLabel("");
             plt.Axes.AutoScaleExpand();
+
+            if (ModoOscuro)
+            {
+                plt.Axes.Bottom.TickLabelStyle.ForeColor = ScottPlot.Color.FromColor(System.Drawing.Color.LimeGreen);     // o el color que quieras
+                plt.Axes.Left.TickLabelStyle.ForeColor = ScottPlot.Color.FromColor(System.Drawing.Color.LimeGreen);
+            }
 
             crtGrafico.Refresh();
 
