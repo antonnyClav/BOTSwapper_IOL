@@ -106,8 +106,6 @@ namespace BOTSwapper
                 if (ModoOscuro) AplicarTemaOscuro(this);
 
                 cboUmbral.Text = configuracion.GetSection("MiConfiguracion:Umbral").Value;
-                txtUsuarioIOL.Text = configuracion.GetSection("MiConfiguracion:UsuarioIOL").Value;
-                txtClaveIOL.Text = configuracion.GetSection("MiConfiguracion:ClaveIOL").Value;
                 txtUsuarioIOL.Text = configuracion.GetSection("MiConfiguracion:UsuarioVETA").Value;
                 txtClaveIOL.Text = configuracion.GetSection("MiConfiguracion:ClaveVETA").Value;
                 timeOffset = double.Parse(configuracion.GetSection("MiConfiguracion:TimeOffset").Value);
@@ -324,8 +322,6 @@ namespace BOTSwapper
                 var socketTask = await socket.Start();
                 socketTask.Wait(1000);
                 ToLog("Websocket Ok");
-                LoginIOL();
-                ToLog("Login IOL Ok");
 
                 oCnn = new SqlConnection(cs);
                 await oCnn.OpenAsync();
@@ -344,62 +340,6 @@ namespace BOTSwapper
             {
                 ToLog(e.Message);
             }
-        }
-
-        private async void LoginIOL()
-        {
-            try
-            {
-                if (expires == DateTime.MinValue)
-                {
-                    var parametros = new Dictionary<string, string>()
-                    {
-                        { "username", txtUsuarioIOL.Text },
-                        { "password", txtClaveIOL.Text },
-                        { "grant_type", "password" }
-                    };
-                    string response;
-                    response = GetResponsePOST("/token", parametros);
-                    dynamic json = JObject.Parse(response);
-                    bearer = "Bearer " + json.access_token;
-                    expires = DateTime.Now.AddSeconds((double)json.expires_in - 300);
-                    refresh = json.refresh_token;
-                }
-                else
-                {
-                    if (DateTime.Now >= expires)
-                    {
-                        var parametros = new Dictionary<string, string>()
-                        {
-                            { "refresh_token", refresh },
-                            { "grant_type", "refresh_token" }
-                        };
-                        string response;
-                        response = GetResponsePOST("/token", parametros);
-                        if (response.Contains("Error") || response.Contains("excedi"))
-                        {
-                            ToLog(response);
-                        }
-                        else
-                        {
-                            dynamic json = JObject.Parse(response);
-                            bearer = "Bearer " + json.access_token;
-                            expires = DateTime.Now.AddSeconds((double)json.expires_in - 300);
-                            refresh = json.refresh_token;
-                        }
-                    }
-                }
-                txtBearer.Text = bearer;
-                tmrToken.Interval = 1000;
-                tmrToken.Enabled = true;
-                tmrToken.Start();
-
-            }
-            catch (Exception e)
-            {
-                ToLog(e.Message);
-            }
-
         }
 
         //tony
@@ -496,7 +436,6 @@ namespace BOTSwapper
             string response;
 
             Ticker ticker;
-            LoginIOL();
 
             ticker1 = cboTicker1.Text;
             ticker = tickers.FirstOrDefault(t => t.NombreMedio == ticker1 + cboPlazo.Text);
@@ -1077,7 +1016,6 @@ namespace BOTSwapper
         private async Task<bool> Operar(string ticker1, int cantidadTicker1, double precioTicker1, string ticker2, int cantidadTicker2, double precioTicker2)
         {
             bool bReturn = false;
-            LoginIOL();
             //ToLog("Iniciando");
 
             //ToLog(ticker1 + " Q:" + cantidadTicker1 + " P:" + precioTicker1 + " -> "

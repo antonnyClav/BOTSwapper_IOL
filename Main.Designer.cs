@@ -233,7 +233,7 @@
             // chkAuto
             // 
             chkAuto.AutoSize = true;
-            chkAuto.Location = new Point(662, 19);
+            chkAuto.Location = new Point(658, 19);
             chkAuto.Name = "chkAuto";
             chkAuto.Size = new Size(52, 19);
             chkAuto.TabIndex = 23;
