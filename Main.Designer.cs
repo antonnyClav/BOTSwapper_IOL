@@ -66,12 +66,13 @@
             label1 = new Label();
             lstLog = new ListBox();
             groupBox3 = new GroupBox();
-            txtBearer = new TextBox();
+            btnStop = new Button();
+            txtToken = new TextBox();
             label16 = new Label();
             btnIngresar = new Button();
             label14 = new Label();
-            txtClaveIOL = new TextBox();
-            txtUsuarioIOL = new TextBox();
+            txtClave = new TextBox();
+            txtUsuario = new TextBox();
             label3 = new Label();
             crtGrafico = new ScottPlot.WinForms.FormsPlot();
             groupBox4 = new GroupBox();
@@ -233,7 +234,7 @@
             // chkAuto
             // 
             chkAuto.AutoSize = true;
-            chkAuto.Location = new Point(658, 19);
+            chkAuto.Location = new Point(655, 19);
             chkAuto.Name = "chkAuto";
             chkAuto.Size = new Size(52, 19);
             chkAuto.TabIndex = 23;
@@ -429,12 +430,13 @@
             // 
             // groupBox3
             // 
-            groupBox3.Controls.Add(txtBearer);
+            groupBox3.Controls.Add(btnStop);
+            groupBox3.Controls.Add(txtToken);
             groupBox3.Controls.Add(label16);
             groupBox3.Controls.Add(btnIngresar);
             groupBox3.Controls.Add(label14);
-            groupBox3.Controls.Add(txtClaveIOL);
-            groupBox3.Controls.Add(txtUsuarioIOL);
+            groupBox3.Controls.Add(txtClave);
+            groupBox3.Controls.Add(txtUsuario);
             groupBox3.Controls.Add(label3);
             groupBox3.Location = new Point(12, 421);
             groupBox3.Name = "groupBox3";
@@ -443,12 +445,23 @@
             groupBox3.TabStop = false;
             groupBox3.Text = "Login";
             // 
-            // txtBearer
+            // btnStop
             // 
-            txtBearer.Location = new Point(80, 47);
-            txtBearer.Name = "txtBearer";
-            txtBearer.Size = new Size(559, 23);
-            txtBearer.TabIndex = 12;
+            btnStop.Enabled = false;
+            btnStop.Location = new Point(645, 16);
+            btnStop.Name = "btnStop";
+            btnStop.Size = new Size(64, 51);
+            btnStop.TabIndex = 13;
+            btnStop.Text = "Stop";
+            btnStop.UseVisualStyleBackColor = true;
+            btnStop.Click += btnStop_Click;
+            // 
+            // txtToken
+            // 
+            txtToken.Location = new Point(80, 46);
+            txtToken.Name = "txtToken";
+            txtToken.Size = new Size(472, 23);
+            txtToken.TabIndex = 12;
             // 
             // label16
             // 
@@ -461,11 +474,11 @@
             // 
             // btnIngresar
             // 
-            btnIngresar.Location = new Point(645, 12);
+            btnIngresar.Location = new Point(575, 16);
             btnIngresar.Name = "btnIngresar";
-            btnIngresar.Size = new Size(64, 53);
+            btnIngresar.Size = new Size(64, 51);
             btnIngresar.TabIndex = 8;
-            btnIngresar.Text = "Ingresar";
+            btnIngresar.Text = "Start";
             btnIngresar.UseVisualStyleBackColor = true;
             btnIngresar.Click += btnIngresar_Click;
             // 
@@ -478,20 +491,20 @@
             label14.TabIndex = 7;
             label14.Text = "Clave";
             // 
-            // txtClaveIOL
+            // txtClave
             // 
-            txtClaveIOL.Location = new Point(232, 17);
-            txtClaveIOL.Name = "txtClaveIOL";
-            txtClaveIOL.Size = new Size(100, 23);
-            txtClaveIOL.TabIndex = 6;
-            txtClaveIOL.UseSystemPasswordChar = true;
+            txtClave.Location = new Point(232, 17);
+            txtClave.Name = "txtClave";
+            txtClave.Size = new Size(100, 23);
+            txtClave.TabIndex = 6;
+            txtClave.UseSystemPasswordChar = true;
             // 
-            // txtUsuarioIOL
+            // txtUsuario
             // 
-            txtUsuarioIOL.Location = new Point(80, 17);
-            txtUsuarioIOL.Name = "txtUsuarioIOL";
-            txtUsuarioIOL.Size = new Size(100, 23);
-            txtUsuarioIOL.TabIndex = 5;
+            txtUsuario.Location = new Point(80, 17);
+            txtUsuario.Name = "txtUsuario";
+            txtUsuario.Size = new Size(100, 23);
+            txtUsuario.TabIndex = 5;
             // 
             // label3
             // 
@@ -839,11 +852,11 @@
         private TextBox txtTicker1Ask;
         private ScottPlot.WinForms.FormsPlot crtGrafico;
         private Label label14;
-        private TextBox txtClaveIOL;
-        private TextBox txtUsuarioIOL;
+        private TextBox txtClave;
+        private TextBox txtUsuario;
         private Label label16;
         private Button btnIngresar;
-        private TextBox txtBearer;
+        private TextBox txtToken;
         private GroupBox groupBox4;
         private CheckBox chkAutoVol;
         private ComboBox cboUmbral;
@@ -873,5 +886,6 @@
         private TextBox txtMin;
         private Label label29;
         private TextBox txtDesvios;
+        private Button btnStop;
     }
 }

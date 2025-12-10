@@ -34,3 +34,9 @@
 2025-12-10 11:45:27 - ------------------------------
 2025-12-10 11:45:27 - Desocupado
 2025-12-10 11:45:27 - Fin--------------------------
+2025-12-10 18:07:35 - Login VETA Ok
+2025-12-10 18:07:39 - Websocket Ok
+2025-12-10 18:07:39 - SQL Server conectado Ok
+2025-12-10 18:07:44 - Bot detenido correctamente
+2025-12-10 18:10:34 - Login VETA Ok
+2025-12-10 18:10:34 - Bot detenido correctamente

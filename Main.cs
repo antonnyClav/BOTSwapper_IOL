@@ -1,25 +1,11 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Linq;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-using System.Net;
-using System.Text;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrackBar;
-using System.Configuration;
 using System.Media;
 using Primary;
 using Primary.Data;
 using Microsoft.Data.SqlClient;
 using System.Data;
 using ScottPlot;
-using System.Diagnostics;
-using OpenTK;
-using RestSharp;
-using Azure;
-using Newtonsoft.Json;
-using System;
-using System;
-using System.Drawing;
-using System.Numerics;
 using BOTSwapper.Interfaces;
 
 namespace BOTSwapper
@@ -27,6 +13,8 @@ namespace BOTSwapper
 {
     public partial class Main : Form
     {
+        private CancellationTokenSource cts;  // ← AÑADE ESTO como campo de la clase
+
         private readonly IBroker _broker;
 
         const string sURLIOL = "https://api.invertironline.com";
@@ -106,8 +94,8 @@ namespace BOTSwapper
                 if (ModoOscuro) AplicarTemaOscuro(this);
 
                 cboUmbral.Text = configuracion.GetSection("MiConfiguracion:Umbral").Value;
-                txtUsuarioIOL.Text = configuracion.GetSection("MiConfiguracion:UsuarioVETA").Value;
-                txtClaveIOL.Text = configuracion.GetSection("MiConfiguracion:ClaveVETA").Value;
+                txtUsuario.Text = configuracion.GetSection("MiConfiguracion:UsuarioVETA").Value;
+                txtClave.Text = configuracion.GetSection("MiConfiguracion:ClaveVETA").Value;
                 timeOffset = double.Parse(configuracion.GetSection("MiConfiguracion:TimeOffset").Value);
                 cs = configuracion.GetSection("MiConfiguracion:CS").Value;
                 intentos = int.Parse(configuracion.GetSection("MiConfiguracion:Intentos").Value);
@@ -204,59 +192,6 @@ namespace BOTSwapper
             SystemSounds.Exclamation.Play();
             chkAutoVol.Checked = false;
         }
-
-        private string GetResponsePOST(string sURLRecurso, Dictionary<string, string> parametros)
-        {
-
-            var client = new RestClient(sURLIOL);
-            var request = new RestRequest(sURLRecurso, Method.POST);
-            request.AddHeader("Content-Type", "application/x-www-form-urlencoded");
-            request.AddHeader("Cookie", "1ea603=9HlJ7jDhxAcl8Kr7mVSKVugsK3AhfmaJ+x7Rg4i21jZz82yrpqXoUM27KqH6RxLbn5G74mjXrXEqfv/repNJB8LhgnjL5/MKYm/Gkh/ci8k0Aif9n/ANh9CHuS2rEbaYTUaACZ3YNMJJMVyoy2Kxt1rwXw0ciOmbPBamT5KtBqLl9SQR");
-
-            if (bearer != null)
-            {
-                request.AddHeader("Authorization", bearer);
-            }
-
-            // Agregar cada parámetro del diccionario
-            foreach (var p in parametros)
-            {
-                request.AddParameter(p.Key, p.Value);
-            }
-
-            try
-            {
-                var response = client.Execute(request);
-                //Console.WriteLine(response.Content);
-                return response.Content;
-            }
-            catch (Exception ex)
-            {
-
-                return ex.Message;
-            }
-
-        }
-
-        //private string GetResponseGET(string sURLRecurso, string token)
-        //{
-        //    var client = new RestClient(sURLIOL);
-        //    var request = new RestRequest(sURLRecurso, Method.GET);
-        //    request.AddHeader("Authorization", token);
-        //    request.AddHeader("Cookie", "1ea603=MuHfvuwOKZdvI6yElkJgUoz5BqAD8qe4WIW3jAmoLD/H7GeYR52OTikKNKm2SVpfTRC7es26SwmEsSuM7nlnlXv0p35fvIzPFiA2EMKplgaNh7ddDGF1TZCoG35cIbjKWIm2+yLGtu9mWNBjTnrtmGQlSHxoxh2OJn9kmJaClZKOkm9O");
-
-        //    try
-        //    {
-        //        var response = client.Execute(request);
-        //        return response.Content;
-        //    }
-        //    catch (Exception ex)
-        //    {
-
-        //        return ex.Message;
-        //    }
-        //}
-
         private async void ToLog(string s)
         {
             lstLog.Items.Add(DateTime.Now.ToLongTimeString() + ": " + s);
@@ -264,7 +199,6 @@ namespace BOTSwapper
 
             GrabarLog(s);
         }
-
         public void GrabarLog(string mensaje)
         {
             object _locker = new object();
@@ -296,8 +230,11 @@ namespace BOTSwapper
         {
             try
             {
+                this.btnStop.Enabled = true;
+                this.btnIngresar.Enabled = false;
+
                 var api = new Api(new Uri(sURLVETA));
-                await api.Login(txtUsuarioIOL.Text, txtClaveIOL.Text);
+                await api.Login(txtUsuario.Text, txtClave.Text);
                 if (api.AccessToken == null)
                 {
                     ToLog("Login VETA ERROR!");
@@ -306,7 +243,7 @@ namespace BOTSwapper
                 else
                 {
                     ToLog("Login VETA Ok");
-                    txtBearer.Text = api.AccessToken;
+                    txtToken.Text = api.AccessToken;
                 }
                 tokenVETA = "Bearer " + api.AccessToken;
 
@@ -339,6 +276,11 @@ namespace BOTSwapper
             catch (Exception e)
             {
                 ToLog(e.Message);
+            }
+            finally
+            {
+                // Esto se ejecuta cuando el usuario pulsa Stop o hay error
+                FinalizarBot();
             }
         }
 
@@ -407,7 +349,6 @@ namespace BOTSwapper
                 ToLog($"Error en OnMarketData: {ex.Message}");
             }
         }
-
         private void FillListaTickers()
         {
             nombres.Clear();
@@ -702,40 +643,9 @@ namespace BOTSwapper
             tmrRefresh.Start();
 
         }
-
         private async Task<double> ObtenerEfectivoDisponible()
         {
             return await _broker.ObtenerEfectivoDisponible();
-        }
-        //private double ObtenerEfectivoDisponible2()
-        //{
-        //    string json = GetResponseGET("/api/v2/estadocuenta", bearer);
-
-        //    var estado = JsonConvert.DeserializeObject<EstadoCuenta>(json);
-
-        //    if (estado?.cuentas == null)
-        //        return 0;
-
-        //    var cuentaPesos = estado.cuentas
-        //        .FirstOrDefault(c => c.moneda == "peso_Argentino");
-
-        //    if (cuentaPesos == null)
-        //        return 0;
-
-        //    return cuentaPesos.disponible;
-        //}
-
-
-        private int CalcularCantidad(double efectivoDisponible, double precioAsk)
-        {
-            if (precioAsk <= 0) return 0;
-
-            int cantidad = (int)Math.Floor(efectivoDisponible / precioAsk);
-
-            // No comprar 0
-            if (cantidad < 1) return 0;
-
-            return cantidad;
         }
         public int CalcularCantidadSegura(decimal montoDisponible, decimal precio, decimal factorCosto = 1.001915m)
         {
@@ -769,8 +679,6 @@ namespace BOTSwapper
             // int cantidadLotes = (cantidadCruda / 100) * 100;
             // return cantidadLotes;
         }
-
-
         private async void RefreshChart()
         {
 
@@ -967,12 +875,10 @@ namespace BOTSwapper
                 Application.DoEvents();
             }
         }
-
         private void btnRotar2a1_Click(object sender, EventArgs e)
         {
             Rotar2a1();
         }
-
         private async void Rotar2a1()
         {
             string ticker1, ticker2;
@@ -1012,7 +918,6 @@ namespace BOTSwapper
                 Application.DoEvents();
             }
         }
-
         private async Task<bool> Operar(string ticker1, int cantidadTicker1, double precioTicker1, string ticker2, int cantidadTicker2, double precioTicker2)
         {
             bool bReturn = false;
@@ -1105,78 +1010,10 @@ namespace BOTSwapper
             return await _broker.GetEstadoOperacion(idoperacion);
         }
 
-        //private string GetEstadoOperacion2(string idoperacion)
-        //{
-        //    string response;
-        //    response = GetResponseGET("/api/v2/operaciones/" + idoperacion, bearer);
-        //    if (response.Contains("Error") || response.Contains("Se exced"))
-        //    {
-        //        return "Error";
-        //    }
-        //    else
-        //    {
-        //        dynamic json = JObject.Parse(response);
-        //        return json.estadoActual.Value;
-        //    }
-        //}
-
         private async Task<string> Comprar(string simbolo, int cantidad, double precio)
         {
             string plazo = cboPlazo.Text == "CI" ? "t0" : "t1";
             return await _broker.Comprar(simbolo, cantidad, precio, plazo);
-        }
-
-        private string Comprar2(string simbolo, int cantidad, double precio)
-        {
-            ToLog("Comprando " + simbolo);
-            try
-            {
-                //Application.DoEvents();
-                string validez = DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + "T17:59:59.000Z";
-                string plazo = cboPlazo.Text == "CI" ? "t0" : "t1";
-
-                var parametros = new Dictionary<string, string>()
-                {
-                    { "mercado", "bCBA" },
-                    { "simbolo", simbolo },
-                    { "cantidad", cantidad.ToString() },
-                    { "precio", precio.ToString().Replace(",", ".") },
-                    { "validez", validez },
-                    { "plazo", plazo }
-                };
-
-                string response;
-                response = GetResponsePOST("/api/v2/operar/Comprar", parametros);
-                if (response.Contains("Error") || response.Contains("opuesta"))
-                {
-                    return "Error";
-                }
-                else
-                {
-                    dynamic json = JObject.Parse(response);
-                    string operacion = json.numeroOperacion;
-                    if (json.ok == "false")
-                    {
-                        string description =
-                            json["messages"] != null &&
-                            json["messages"].HasValues &&
-                            json["messages"][0]["description"] != null
-                                ? json["messages"][0]["description"].ToString()
-                                : "Error";
-                        return description;
-                    }
-                    else
-                    {
-                        return operacion;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                ToLog("Error Metodo Comprar: " + ex.Message);
-                return "Error";
-            }
-
         }
 
         private async Task<string> Vender(string simbolo, int cantidad, double precio)
@@ -1185,56 +1022,6 @@ namespace BOTSwapper
             return await _broker.Vender(simbolo, cantidad, precio, plazo);
         }
 
-        private string Vender2(string simbolo, int cantidad, double precio)
-        {
-            ToLog("Vendiendo " + simbolo);
-            try
-            {
-                //Application.DoEvents();
-                string validez = DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day + "T17:59:59.000Z";
-                string plazo = cboPlazo.Text == "CI" ? "t0" : "t1";
-                var parametros = new Dictionary<string, string>()
-                {
-                    { "mercado", "bCBA" },
-                    { "simbolo", simbolo },
-                    { "cantidad", cantidad.ToString() },
-                    { "precio", precio.ToString().Replace(",", ".") },
-                    { "validez", validez },
-                    { "plazo", plazo }
-                };
-                string response;
-                response = GetResponsePOST("/api/v2/operar/Vender", parametros);
-                if (response.Contains("Error") || response.Contains("opuesta"))
-                {
-                    return "Error";
-                }
-                else
-                {
-                    dynamic json = JObject.Parse(response);
-                    string operacion = json.numeroOperacion;
-                    if (json.ok == "false")
-                    {
-                        string description =
-                            json["messages"] != null &&
-                            json["messages"].HasValues &&
-                            json["messages"][0]["description"] != null
-                                ? json["messages"][0]["description"].ToString()
-                                : "Error";
-
-                        return description;
-                    }
-                    else
-                    {
-                        return operacion;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                ToLog("Error Metodo Vender: " + ex.Message);
-                return "Error";
-            }
-        }
         private DateTime Ahora()
         {
             TimeSpan timeSpan = TimeSpan.FromHours(timeOffset);
@@ -1255,6 +1042,24 @@ namespace BOTSwapper
         private void cboTicker2_SelectedIndexChanged(object sender, EventArgs e)
         {
             FillListaTickers();
+        }
+
+        private void btnStop_Click(object sender, EventArgs e)
+        {
+            FinalizarBot();
+            cts?.Cancel(); // ← Esto detiene el await del WebSocket y hace que salte al finally
+        }
+
+        private void FinalizarBot()
+        {
+            // Todo lo que tiene que pasar al parar el bot
+            tmrRefresh.Stop();
+            tmrRefresh.Enabled = false;
+
+            btnStop.Enabled = false;
+            btnIngresar.Enabled = true;
+
+            ToLog("Bot detenido correctamente");
         }
     }
 
@@ -1279,17 +1084,14 @@ namespace BOTSwapper
             offer = 0;
         }
     }
-
     public class EstadoCuenta
     {
         public List<Cuenta> cuentas { get; set; } = new List<Cuenta>();
     }
-
     public class Cuenta
     {
         public string moneda { get; set; } = string.Empty;
         public double saldo { get; set; }
         public double disponible { get; set; }
     }
-
 }
